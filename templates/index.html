@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Fraud Detector</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="main-title">Job Post Authenticator</h1>
+            <p class="subtitle">AI-Powered Fraud Detection System</p>
+        </header>
+
+        <main class="main-content">
+            <form action="/predict" method="post" class="analysis-form">
+
+                <!-- TEXT INPUT -->
+                <label class="input-label">Paste Job Description</label>
+                <textarea name="combined_text" placeholder="Paste job description here..."></textarea>
+
+                <!-- URL INPUT -->
+                <label class="input-label">Job URL (Optional)</label>
+                <input type="url" name="job_url" class="url-input"
+                       placeholder="https://www.example.com/job-details" />
+
+                <button type="submit" class="cta-button">Analyze Job Post</button>
+            </form>
+
+            {% if prediction %}
+            <div class="result-container">
+                <div class="result-card">
+                    <p class="result-text">{{ prediction }}</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="examples-grid">
+                <div class="example-card">
+                    <h3>Legitimate Example</h3>
+                    <textarea id="legit-job" readonly>
+Title: Software Engineer
+Company: Goldman Sachs
+Location: Bengaluru, India
+Description: Develop scalable software, architect low-latency infrastructure, and leverage machine learning to turn data into action.
+How to Apply: Visit the official careers page.
+                    </textarea>
+                    <button class="copy-button">Copy Text</button>
+                </div>
+
+                <div class="example-card">
+                    <h3>Fraudulent Example</h3>
+                    <textarea id="fraud-job" readonly>
+Title: Junior Developer - Immediate Hiring
+Company: Future AI Solutions
+Location: Remote
+Description: Work with international clients, earn ₹2,00,000/month. No experience required.
+How to Apply: Send resume over WhatsApp + pay ₹4,999 security fee.
+                    </textarea>
+                    <button class="copy-button">Copy Text</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.querySelectorAll('.copy-button').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const content = e.target.previousElementSibling.value;
+                navigator.clipboard.writeText(content);
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy Text', 2000);
+            });
+        });
+    </script>
+</body>
+</html>
